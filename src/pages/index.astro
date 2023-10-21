@@ -1,5 +1,6 @@
 ---
 import { ShopButton, OrangeButton, TransparentButton } from '../components/Button'
+import { RadioInput, RadioGroup } from '../components/Radio'
 import '@fontsource-variable/manrope';
 ---
 
@@ -16,5 +17,8 @@ import '@fontsource-variable/manrope';
     <ShopButton>See Product</ShopButton>
     <OrangeButton>See Product</OrangeButton>
     <TransparentButton>See Product</TransparentButton>
+    <RadioGroup client:only="vue">
+      <RadioInput client:only="vue" />
+    </RadioGroup>
 	</body>
 </html>
