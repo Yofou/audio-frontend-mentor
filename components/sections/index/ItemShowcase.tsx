@@ -18,7 +18,7 @@ export const ItemProduct = defineComponent(
             {context.slots.default({})}
           </h2>
           <a
-          class="mt-4 flex gap-[.8rem] font-bold after:contents after:absolute after:inset-0 items-center text-overline tracking-[.0625rem] uppercase text-black-pure/50"
+          class="mt-4 flex gap-[.8rem] font-bold after:contents after:absolute after:inset-0 hover:text-orange-600 transition-colors items-center text-overline tracking-[.0625rem] uppercase text-black-pure/50"
             href={props.href}
           >
             shop <Caret />
@@ -42,7 +42,7 @@ export const ItemShowcase = defineComponent(
   () => {
     return () => {
       return (
-        <section class="max-w-[70rem] flex gap-[1.88rem] justify-self-center mt-[12.5rem]">
+        <section class="max-w-[70rem] flex gap-[1.88rem] justify-self-center mt-[10.5rem]">
           <ItemProduct src="/showcase-headphones.png" href="/">
             Headphones
           </ItemProduct>
