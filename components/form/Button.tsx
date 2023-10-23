@@ -1,5 +1,6 @@
 import { defineComponent, type SlotsType } from "vue";
 import { twMerge as twm } from "tailwind-merge";
+import { Caret } from "../icons/Caret";
 
 export const Button = defineComponent(
   (props, context) => {
@@ -54,20 +55,7 @@ export const ShopButton = defineComponent(
         <span class="text-black-pure/50 hover:text-orange-600">
           {context.slots.default({})}
         </span>
-        <svg
-          width="7"
-          height="12"
-          viewBox="0 0 7 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            id="Path 2"
-            d="M1.32178 1L6.32178 6L1.32178 11"
-            stroke="#D87D4A"
-            stroke-width="2"
-          />
-        </svg>
+        <Caret />
       </Button>
     );
   },

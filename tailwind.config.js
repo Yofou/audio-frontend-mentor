@@ -2,10 +2,16 @@ import plugin from 'tailwindcss/plugin'
 
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  content: [
+    "./components/**/*.{js,vue,ts,tsx,jsx}",
+    "./layouts/**/*.{vue,tsx,jsx}",
+    "./pages/**/*.{vue,tsx,jsx}",
+    "./plugins/**/*.{vue,tsx,jsx}",
+    "./app.vue",
+    "./error.vue",
+  ],
 	theme: {
     colors: {
-      black: '#000',
       orange: {
         300: '#FBAF85',
         600: '#D87D4A',
@@ -18,7 +24,8 @@ export default {
       black: {
         'pure': '#000',
         300: '#101010',
-      }
+      },
+      red: '#CD2C2C'
     },
     fontFamily: {
       manrope: ["'Manrope Variable'", 'sans-serif']
@@ -33,11 +40,14 @@ export default {
       overline: '0.875rem',
       subtitle: '0.8125rem',
       body: '0.9375rem'
+    },
+    letterSpacing: {
+      tight: '-0.01563rem'
     }
 	},
   plugins: [
-    plugin(({ addUtilities, theme }) => {
-      addUtilities({
+    plugin(({ addComponents, theme }) => {
+      addComponents({
         '.font-heading-1': {
           fontFamily: theme('fontFamily.manrope'),
           fontSize: theme('fontSize.h1'),
@@ -49,7 +59,7 @@ export default {
           fontFamily: theme('fontFamily.manrope'),
           fontSize: theme('fontSize.h2'),
           letterSpacing: '0.08931rem', 
-          lineHeight: '2.25rem',
+          lineHeight: '2.75rem',
           fontWeight: 700
         },
         '.font-heading-3': {
@@ -80,9 +90,9 @@ export default {
           lineHeight: 'normal',
           fontWeight: 700
         },
-        '.font-outline': {
+        '.font-overline': {
           fontFamily: theme('fontFamily.manrope'),
-          fontSize: theme('fontSize.outline'),
+          fontSize: theme('fontSize.overline'),
           letterSpacing: '0.625rem', 
           lineHeight: 'normal',
           fontWeight: 400

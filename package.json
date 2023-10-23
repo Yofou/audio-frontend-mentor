@@ -1,27 +1,24 @@
 {
-  "name": "audio-frontend-mentor",
+  "name": "nuxt-app",
+  "private": true,
   "type": "module",
-  "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@astrojs/tailwind": "^5.0.2",
-    "@astrojs/vue": "^3.0.1",
-    "@fontsource-variable/manrope": "^5.0.16",
-    "@vitejs/plugin-vue-jsx": "^3.0.2",
-    "@vue-macros/volar": "^0.17.0",
-    "astro": "^3.3.2",
-    "tailwind-merge": "^1.14.0",
-    "tailwindcss": "^3.0.24",
-    "unplugin-vue-macros": "^2.6.1",
-    "vue": "^3.2.30"
+    "build": "nuxt build",
+    "dev": "nuxt dev -o",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@vue-macros/astro": "^0.1.13"
+    "@nuxt/devtools": "latest",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "nuxt": "^3.8.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.5.6",
+    "tailwind-merge": "^1.14.0"
   }
 }
