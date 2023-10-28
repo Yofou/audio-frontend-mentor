@@ -1,7 +1,7 @@
 export const ProductShadow = () => {
   return (
     <svg
-      class="absolute top-[1.06rem]"
+    class="absolute w-[10rem] md:w-auto top-[calc(100%-3rem)] left-1/2 transform -translate-x-1/2"
       width="209"
       height="106"
       viewBox="0 0 209 106"

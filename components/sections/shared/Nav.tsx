@@ -1,9 +1,16 @@
 import type { SlotsType } from "vue";
 import { Logo } from "~/components/icons/Logo";
+import { ItemShowcase } from "../index/ItemShowcase";
+import { onClickOutside, onKeyStroke } from "@vueuse/core";
+import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
 
 export const NavLink = defineComponent(
   (props, context) => {
-    return () => <a class="hover:text-orange-600 transition-colors" href={props.href}>{context.slots.default({})}</a>;
+    return () => (
+      <a class="hover:text-orange-600 transition-colors" href={props.href}>
+        {context.slots.default({})}
+      </a>
+    );
   },
   {
     name: "NavLinks",
@@ -12,26 +19,106 @@ export const NavLink = defineComponent(
   }
 );
 
-export const Nav = defineComponent(() => {
-  return () => {
-    return (
-      <nav class="w-full max-w-[70rem] py-[2.25rem] border-b border-white-pure/20 flex justify-between mx-auto items-center font-overline tracking-[0.125rem] font-bold">
-        <Logo />
+export const Nav = defineComponent(
+    (props: { class?: string }) => {
+    const isOpen = ref(false);
+    const onToggle = () => {
+      isOpen.value = !isOpen.value;
+    };
 
-        <div class="flex gap-8 uppercase text-white-pure">
-          <NavLink href="/">Home</NavLink>
-          <NavLink href="/headphones">Headphones</NavLink>
-          <NavLink href="/speaker">Speaker</NavLink>
-          <NavLink href="/earphones">Earphones</NavLink>
-        </div>
+    const tabletContainerElm = ref(null);
+    onClickOutside(tabletContainerElm, () => {
+      isOpen.value = false;
+    });
 
-        <NavLink class="text-white-pure" href="/cart">
-          <Cart />
-        </NavLink>
-      </nav>
-    );
-  };
-});
+    onKeyStroke("Escape", () => {
+      isOpen.value = false;
+    });
+
+    const { activate, deactivate } = useFocusTrap(tabletContainerElm);
+    watch(isOpen, ($isOpen) => {
+      if ($isOpen) {
+        nextTick(() => {
+          activate();
+        });
+      } else {
+        deactivate();
+      }
+    });
+
+    return () => {
+      return (
+        <nav class="w-full relative px-[2.48rem] z-10 max-w-[70rem] justify-self-center justify-between py-[2.25rem] flex en items-center font-overline tracking-[0.125rem] font-bold">
+          <div class="flex gap-[2.6rem]">
+            <button onClick={onToggle} class="md:hidden">
+              <Hamburger />
+            </button>
+            <Logo />
+          </div>
+
+          <div class="hidden md:flex gap-8 uppercase text-white-pure">
+            <NavLink href="/">Home</NavLink>
+            <NavLink href="/headphones">Headphones</NavLink>
+            <NavLink href="/speaker">Speaker</NavLink>
+            <NavLink href="/earphones">Earphones</NavLink>
+          </div>
+
+          <NavLink class="text-white-pure" href="/cart">
+            <Cart />
+          </NavLink>
+
+          <div class="absolute top-full left-0 right-0 mx-[2.48rem] h-[2px] bg-white-600/10 md:bg-white-600/20" />
+
+          {isOpen.value && (
+            <section class="w-screen h-screen fixed md:hidden top-0 left-0 bg-black-pure/40">
+              <div ref={tabletContainerElm} class="w-full bg-white-pure">
+                <div class="w-full flex justify-between bg-black-300 px-[2.44rem] py-[2.31rem]">
+                  <div class="flex gap-[2.6rem]">
+                    <button onClick={onToggle} class="md:hidden">
+                      <Hamburger />
+                    </button>
+                    <Logo />
+                  </div>
+
+                  <div class="hidden md:flex gap-8 uppercase text-white-pure">
+                    <NavLink href="/">Home</NavLink>
+                    <NavLink href="/headphones">Headphones</NavLink>
+                    <NavLink href="/speaker">Speaker</NavLink>
+                    <NavLink href="/earphones">Earphones</NavLink>
+                  </div>
+
+                  <NavLink class="text-white-pure" href="/cart">
+                    <Cart />
+                  </NavLink>
+                </div>
+                <ItemShowcase class="mt-0 px-[2.5rem] pt-[6.75rem] pb-[4.19rem]" />
+              </div>
+            </section>
+          )}
+        </nav>
+      );
+    };
+  },
+  {
+    props: ["class"],
+  }
+);
+
+const Hamburger = () => {
+  return (
+    <svg
+      width="16"
+      height="15"
+      viewBox="0 0 16 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="16" height="3" fill="white" />
+      <rect y="6" width="16" height="3" fill="white" />
+      <rect y="12" width="16" height="3" fill="white" />
+    </svg>
+  );
+};
 
 const Cart = () => {
   return (

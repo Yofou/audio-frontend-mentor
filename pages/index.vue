@@ -2,16 +2,17 @@
   import { Hero } from '~/components/sections/index/Hero'
   import { ItemShowcase } from '~/components/sections/index/ItemShowcase';
   import { PremiumProducts } from '~/components/sections/index/PremiumProducts';
-  import { Testomony } from '~/components/sections/shared/Testomony';
+  import { Testimony } from '~/components/sections/shared/Testimony';
   import { Footer } from '~/components/sections/shared/Footer';
+  import '@fontsource-variable/manrope';
 </script>
 
 <template>
   <div class="w-full grid min-h-screen grid-cols-1 auto-rows-max">
     <Hero />
-    <ItemShowcase />
-    <PremiumProducts />
-    <Testomony />
+    <ItemShowcase class="px-[2.44rem]" />
+    <PremiumProducts class="px-[2.44rem]" />
+    <Testimony class="px-[2.44rem]" />
     <Footer />
   </div>
 </template>

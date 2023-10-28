@@ -2,12 +2,16 @@ import { defineComponent, type SlotsType } from "vue";
 import { twMerge as twm } from "tailwind-merge";
 import { Caret } from "../icons/Caret";
 
+export type ButtonBaseProps = {
+  class?: string
+}
+
 export const Button = defineComponent(
-  (props, context) => {
+    (props: ButtonBaseProps, context) => {
     return () => (
       <button
         class={twm(
-          "font-subtitle px-[1.97rem] py-[.94rem] uppercase transition-colors",
+          "font-subtitle px-[1.97rem] py-[.94rem] uppercase transition-colors leading-[normal]",
           props.class
         )}
         onClick={() => context.emit("click")}
@@ -36,14 +40,17 @@ export const OrangeButton = defineComponent(
 );
 
 export const TransparentButton = defineComponent(
-  (_, context) => {
+    (props: ButtonBaseProps, context) => {
     return () => (
-      <Button class="bg-black-pure/0 hover:bg-black-pure/100 border border-black-pure text-black-pure hover:text-white-pure">
+      <Button class={twm("bg-black-pure/0 hover:bg-black-pure/100 border border-black-pure text-black-pure hover:text-white-pure", props.class)}>
         {context.slots.default({})}
       </Button>
     );
   },
   {
+    props: {
+      class: String
+    },
     slots: Object as SlotsType<{ default: {} }>,
   }
 );

@@ -6,11 +6,11 @@ export const Footer = defineComponent(
   () => {
     return () => {
       return (
-        <footer class="w-full bg-black-300 h-[22.8rem] mt-[12.5rem] flex justify-center font-overline tracking-[0.125rem] font-bold">
-          <div class="max-w-[70rem] w-full relative pt-[4.69rem]">
+          <footer class="w-full bg-black-300 md:h-[22.8rem] mt-24 md:mt-[12.5rem] flex justify-center font-overline tracking-[0.125rem] font-bold px-[2.44rem]">
+          <div class="max-w-[70rem] w-full relative py-[4.69rem]">
             <div class="w-[6.3rem] h-[.25rem] bg-orange-600 absolute top-0 left-0" />
 
-            <div class="w-full flex justify-between">
+            <div class="w-full flex flex-col gap-8 md:flex-row md:justify-between">
               <Logo />
 
               <div class="flex gap-8 uppercase text-white-pure">
@@ -29,14 +29,21 @@ export const Footer = defineComponent(
                 and visit our demo facility - we’re open 7 days a week.
               </p>
 
-              <div class="flex items-center gap-4">
+              <div class="hidden md:flex items-center gap-4">
                 <Facebook />
                 <Twitter />
                 <Instagram />
               </div>
             </div>
 
-            <p class="font-body font-bold text-white-pure/50 tracking-[normal] mt-14">Copyright 2021. All Rights Reserved</p>
+            <div class="w-full flex justify-between items-end">
+            <p class="font-body font-bold text-white-pure/50 tracking-[normal] mt-20 md:mt-14">Copyright 2021. All Rights Reserved</p>
+              <div class="flex md:hidden items-center gap-4">
+                <Facebook />
+                <Twitter />
+                <Instagram />
+              </div>
+            </div>
           </div>
         </footer>
       );
