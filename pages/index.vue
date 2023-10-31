@@ -10,9 +10,9 @@
 <template>
   <div class="w-full grid min-h-screen grid-cols-1 auto-rows-max">
     <Hero />
-    <ItemShowcase class="px-[2.44rem]" />
-    <PremiumProducts class="px-[2.44rem]" />
-    <Testimony class="px-[2.44rem]" />
+    <ItemShowcase class="px-6 sm:px-[2.44rem]" />
+    <PremiumProducts class="px-6 sm:px-[2.44rem]" />
+    <Testimony class="px-6 sm:px-[2.44rem]" />
     <Footer />
   </div>
 </template>

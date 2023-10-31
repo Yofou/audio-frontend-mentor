@@ -1,15 +1,17 @@
 import type { SlotsType } from "vue";
 import { Logo } from "~/components/icons/Logo";
 import { ItemShowcase } from "../index/ItemShowcase";
-import { onClickOutside, onKeyStroke } from "@vueuse/core";
+import { onClickOutside, onKeyStroke, useWindowSize } from "@vueuse/core";
 import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
+import { twMerge as twm } from 'tailwind-merge'
+import { NuxtLink } from "#components";
 
 export const NavLink = defineComponent(
   (props, context) => {
     return () => (
-      <a class="hover:text-orange-600 transition-colors" href={props.href}>
+      <NuxtLink class="hover:text-orange-600 transition-colors" to={props.href}>
         {context.slots.default({})}
-      </a>
+      </NuxtLink>
     );
   },
   {
@@ -20,7 +22,7 @@ export const NavLink = defineComponent(
 );
 
 export const Nav = defineComponent(
-    (props: { class?: string }) => {
+  (props: { class?: string }) => {
     const isOpen = ref(false);
     const onToggle = () => {
       isOpen.value = !isOpen.value;
@@ -38,17 +40,30 @@ export const Nav = defineComponent(
     const { activate, deactivate } = useFocusTrap(tabletContainerElm);
     watch(isOpen, ($isOpen) => {
       if ($isOpen) {
+        document.body.style.overflow = "hidden"
         nextTick(() => {
           activate();
         });
       } else {
+        document.body.style.overflow = ""
         deactivate();
       }
     });
 
+    const { width } = useWindowSize()
+    watch(width, ($width) => {
+      if ($width > 768) {
+        isOpen.value = false
+      }
+    })
+
+    onUnmounted(() => {
+      document.body.style.overflow = ''
+    })
+
     return () => {
       return (
-        <nav class="w-full relative px-[2.48rem] z-10 max-w-[70rem] justify-self-center justify-between py-[2.25rem] flex en items-center font-overline tracking-[0.125rem] font-bold">
+        <nav class={twm("w-full relative px-[2.48rem] z-10 max-w-[70rem] justify-self-center justify-between py-[2.25rem] flex en items-center font-overline tracking-[0.125rem] font-bold", props.class)}>
           <div class="flex gap-[2.6rem]">
             <button onClick={onToggle} class="md:hidden">
               <Hamburger />
@@ -58,21 +73,21 @@ export const Nav = defineComponent(
 
           <div class="hidden md:flex gap-8 uppercase text-white-pure">
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/headphones">Headphones</NavLink>
-            <NavLink href="/speaker">Speaker</NavLink>
-            <NavLink href="/earphones">Earphones</NavLink>
+            <NavLink href="/category/headphones">Headphones</NavLink>
+            <NavLink href="/category/speakers">Speaker</NavLink>
+            <NavLink href="/category/earphones">Earphones</NavLink>
           </div>
 
-          <NavLink class="text-white-pure" href="/cart">
+          <button class="text-white-pure">
             <Cart />
-          </NavLink>
+          </button>
 
-          <div class="absolute top-full left-0 right-0 mx-[2.48rem] h-[2px] bg-white-600/10 md:bg-white-600/20" />
+          <div class="absolute top-full left-0 right-0 mx-6 sm:mx-[2.48rem] h-[2px] bg-white-600/10 md:bg-white-600/20" />
 
           {isOpen.value && (
-            <section class="w-screen h-screen fixed md:hidden top-0 left-0 bg-black-pure/40">
-              <div ref={tabletContainerElm} class="w-full bg-white-pure">
-                <div class="w-full flex justify-between bg-black-300 px-[2.44rem] py-[2.31rem]">
+            <section class="w-screen h-screen overflow-auto fixed top-0 left-0 bg-black-pure/40">
+              <div ref={tabletContainerElm} class="w-full bg-white-pure rounded-b-[.5rem]">
+              <div class="w-full flex justify-between bg-black-300 px-6 sm:px-[2.44rem] py-[calc(2.31rem-1px)] items-center">
                   <div class="flex gap-[2.6rem]">
                     <button onClick={onToggle} class="md:hidden">
                       <Hamburger />
@@ -80,18 +95,11 @@ export const Nav = defineComponent(
                     <Logo />
                   </div>
 
-                  <div class="hidden md:flex gap-8 uppercase text-white-pure">
-                    <NavLink href="/">Home</NavLink>
-                    <NavLink href="/headphones">Headphones</NavLink>
-                    <NavLink href="/speaker">Speaker</NavLink>
-                    <NavLink href="/earphones">Earphones</NavLink>
-                  </div>
-
-                  <NavLink class="text-white-pure" href="/cart">
+                  <button class="text-white-pure">
                     <Cart />
-                  </NavLink>
+                  </button>
                 </div>
-                <ItemShowcase class="mt-0 px-[2.5rem] pt-[6.75rem] pb-[4.19rem]" />
+                <ItemShowcase class="mt-0 sm:mt-0 px-[2.5rem] pt-[6.75rem] pb-[4.19rem]" />
               </div>
             </section>
           )}
@@ -100,25 +108,24 @@ export const Nav = defineComponent(
     };
   },
   {
+    name: 'Nav',
     props: ["class"],
   }
 );
 
-const Hamburger = () => {
-  return (
-    <svg
-      width="16"
-      height="15"
-      viewBox="0 0 16 15"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect width="16" height="3" fill="white" />
-      <rect y="6" width="16" height="3" fill="white" />
-      <rect y="12" width="16" height="3" fill="white" />
-    </svg>
-  );
-};
+const Hamburger = () => (
+  <svg
+    width="16"
+    height="15"
+    viewBox="0 0 16 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect width="16" height="3" fill="white" />
+    <rect y="6" width="16" height="3" fill="white" />
+    <rect y="12" width="16" height="3" fill="white" />
+  </svg>
+);
 
 const Cart = () => {
   return (
