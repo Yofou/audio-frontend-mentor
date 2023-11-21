@@ -1,4 +1,5 @@
 import { twMerge as twm } from "tailwind-merge";
+import type { SetupContext } from "vue";
 
 type InputProps = {
   modelValue: string;
@@ -62,8 +63,16 @@ export const Input = defineComponent<InputProps>(
   }
 );
 
+type NumberInputProps = {
+  modelValue?: number;
+  class?: string;
+};
+type NumberInputEvents = {
+  "update:modelValue": (message: number | undefined) => void;
+};
+
 export const NumberInput = defineComponent(
-  (props, context) => {
+  (props: NumberInputProps, context: SetupContext<NumberInputEvents>) => {
     const localValue = computed({
       get() {
         return props.modelValue;
@@ -73,12 +82,12 @@ export const NumberInput = defineComponent(
       },
     });
 
-    const onInc = () => localValue.value++;
-    const onDec = () => localValue.value--;
+    const onInc = () => localValue.value != null && localValue.value++;
+    const onDec = () => localValue.value != null && localValue.value--;
 
     return () => {
       return (
-        <div class="w-[7.5rem] h-[3rem] flex p-4 bg-white-600 font-overline tracking-tight">
+          <div class={twm('w-[7.5rem] h-[3rem] flex p-4 bg-white-600 font-overline tracking-tight', props.class)}>
           <button
             class="text-black-pure/25 hover:text-orange-600 transition-colors px-1"
             onClick={onDec}
@@ -86,9 +95,10 @@ export const NumberInput = defineComponent(
             -
           </button>
           <input
-            class="w-full bg-[transparent] text-center [-webkit-appearance:none] [-moz-appearance:textfield]"
+            class="w-full bg-[transparent] text-center"
             v-model={localValue.value}
             type="number"
+            inputmode="numeric"
           />
           <button
             class="text-black-pure/25 hover:text-orange-600 transition-colors px-1"
@@ -102,7 +112,7 @@ export const NumberInput = defineComponent(
   },
   {
     name: "NumberInput",
-    props: ["modelValue"],
-    emits: ["update:modelValue"],
+    props: ['modelValue', "class"],
+    emits: ['update:modelValue']
   }
 );

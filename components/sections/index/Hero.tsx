@@ -1,6 +1,7 @@
 import { OrangeButton } from "~/components/form/Button";
 import { Nav } from "../shared/Nav";
 import { useDebounce, useWindowSize } from "@vueuse/core";
+import { ClientOnly } from "#components";
 
 export const Hero = defineComponent(
   () => {
@@ -13,7 +14,7 @@ export const Hero = defineComponent(
         }
 
         return "/hero-headphones.png";
-      }),
+      })
     );
 
     return () => {
@@ -38,11 +39,13 @@ export const Hero = defineComponent(
               </OrangeButton>
             </section>
 
-            <img
-              class="absolute top-0 md:top-1/2 object-cover right-0 w-full h-full md:w-[708px] md:translate-y-[-45%] md:translate-x-[5%] z-[-10]"
-              src={src.value}
-              alt=""
-            />
+            <ClientOnly>
+              <img
+                class="absolute top-0 md:top-1/2 object-cover right-0 w-full h-full md:w-[708px] md:translate-y-[-45%] md:translate-x-[5%] z-[-10]"
+                src={src.value}
+                alt=""
+              />
+            </ClientOnly>
           </div>
         </section>
       );

@@ -1,46 +1,50 @@
 import { defineComponent, type SlotsType } from "vue";
 import { twMerge as twm } from "tailwind-merge";
 import { Caret } from "../icons/Caret";
+import { NuxtLink } from "#components";
 
 export type ButtonBaseProps = {
-  class?: string
+  class?: string,
+  to?: string,
 }
 
 export const Button = defineComponent(
     (props: ButtonBaseProps, context) => {
     return () => (
-      <button
+      <NuxtLink
         class={twm(
           "font-subtitle px-[1.97rem] py-[.94rem] uppercase transition-colors leading-[normal]",
           props.class
         )}
-        onClick={() => context.emit("click")}
+        to={props.to ?? '/'}
       >
         {context.slots.default({})}
-      </button>
+      </NuxtLink>
     );
   },
   {
     slots: Object as SlotsType<{ default: {} }>,
+    props: ['class', 'to'],
     emits: ["click"],
   }
 );
 
 export const OrangeButton = defineComponent(
-  (_, context) => {
+    (props: ButtonBaseProps, context) => {
     return () => (
-      <Button class="bg-orange-600 hover:bg-orange-300 border border-orange-600 hover:border-orange-300 text-white-pure">
+        <Button class={twm("bg-orange-600 hover:bg-orange-300 border border-orange-600 hover:border-orange-300 text-white-pure", props.class)} to={props.to}>
         {context.slots.default({})}
       </Button>
     );
   },
   {
+    props: ['class', 'to'],
     slots: Object as SlotsType<{ default: {} }>,
   }
 );
 
 export const TransparentButton = defineComponent(
-    (props: ButtonBaseProps, context) => {
+  (props: ButtonBaseProps, context) => {
     return () => (
       <Button class={twm("bg-black-pure/0 hover:bg-black-pure/100 border border-black-pure text-black-pure hover:text-white-pure", props.class)}>
         {context.slots.default({})}

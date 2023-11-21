@@ -10,7 +10,7 @@ export const ItemProduct = defineComponent(
       return (
         <div class="relative w-full h-[10.31rem] md:h-[12.75rem] bg-white-600 rounded-[.5rem] flex flex-col items-center">
           <div class="absolute bottom-[7.75rem] left-1/2 -translate-x-1/2">
-            <img class={twm("", props.imgClass)} src={props.src} alt="" />
+            <img class={twm("", props.imgClass, "translate-y-[10px]")} src={props.src} alt="" />
             <ProductShadow />
           </div>
 
@@ -40,7 +40,7 @@ export const ItemProduct = defineComponent(
 );
 
 export const ItemShowcase = defineComponent(
-  (props) => {
+    (props: { class?: string }) => {
     return () => {
       return (
         <section

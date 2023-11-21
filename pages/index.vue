@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="w-full grid min-h-screen grid-cols-1 auto-rows-max">
+  <div class="w-full grid min-h-screen grid-cols-1 auto-rows-max bg-white-300">
     <Hero />
     <ItemShowcase class="px-6 sm:px-[2.44rem]" />
     <PremiumProducts class="px-6 sm:px-[2.44rem]" />
