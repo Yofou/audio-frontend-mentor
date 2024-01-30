@@ -20,6 +20,7 @@ import { Product } from "~/components/sections/category/Product";
       src="/category-xx99-mark-1.png"
       :isNewProduct="false"
       :reverse="true"
+      to="/products/b1a7d49d-8cb2-4580-8aa6-ae5f5a3832f6"
     />
 
     <Product
@@ -28,6 +29,7 @@ import { Product } from "~/components/sections/category/Product";
       src="/category-xx59.png"
       :isNewProduct="false"
       :reverse="false"
+      to="/products/f435732e-de84-4a95-ace6-af3daa6bca09"
     />
   </CategoryLayout>
 </template>

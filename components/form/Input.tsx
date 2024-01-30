@@ -1,25 +1,34 @@
 import { twMerge as twm } from "tailwind-merge";
 import type { SetupContext } from "vue";
+import { useIMask } from "vue-imask";
 
 type InputProps = {
-  modelValue: string;
+  modelValue?: string;
   label: string;
   error?: string;
   placeholder?: string;
+  mask?: string;
 };
 
 export const Input = defineComponent<InputProps>(
   (props, context) => {
-    const localValue = computed({
-      get() {
-        return props.modelValue;
-      },
-      set(newValue) {
-        context.emit("update:modelValue", newValue);
-      },
+    const hasError = computed(() => (props.error?.length ?? 0) > 0);
+    const { el, typed } = useIMask({
+      // @ts-ignore
+      mask: props.mask ?? /.*/g,
     });
 
-    const hasError = computed(() => (props.error?.length ?? 0) > 0);
+    onMounted(() => {
+      typed.value = props.modelValue ?? ''
+    })
+
+    watchEffect(() => {
+      context.emit("update:modelValue", typed.value);
+    });
+
+    watchEffect(() => {
+      typed.value = props.modelValue ?? ''
+    });
 
     return () => (
       <label>
@@ -45,11 +54,11 @@ export const Input = defineComponent<InputProps>(
         </span>
 
         <input
+          ref={el}
           class={twm(
             "w-full border border-[#CFCFCF] outline-none selection:bg-orange-600 px-[1.5rem] caret-orange-600 focus:border-orange-600 py-[1.12rem] rounded-[.5rem] placeholder:text-black-pure/40 text-black-pure font-overline tracking-tight font-bold",
             hasError.value ? "border-red border-2 focus:border-red" : ""
           )}
-          v-model={localValue.value}
           placeholder={props.placeholder}
           type="text"
         />
@@ -57,8 +66,9 @@ export const Input = defineComponent<InputProps>(
     );
   },
   {
-    props: ["modelValue", "label", "error", "placeholder"],
+    props: ["modelValue", "label", "error", "placeholder", "mask"],
     emits: ["update:modelValue"],
+    inheritAttrs: true,
     name: "Input",
   }
 );
@@ -87,7 +97,12 @@ export const NumberInput = defineComponent(
 
     return () => {
       return (
-          <div class={twm('w-[7.5rem] h-[3rem] flex p-4 bg-white-600 font-overline tracking-tight', props.class)}>
+        <div
+          class={twm(
+            "w-[7.5rem] h-[3rem] flex p-4 bg-white-600 font-overline tracking-tight",
+            props.class
+          )}
+        >
           <button
             class="text-black-pure/25 hover:text-orange-600 transition-colors px-1"
             onClick={onDec}
@@ -112,7 +127,7 @@ export const NumberInput = defineComponent(
   },
   {
     name: "NumberInput",
-    props: ['modelValue', "class"],
-    emits: ['update:modelValue']
+    props: ["modelValue", "class"],
+    emits: ["update:modelValue"],
   }
 );

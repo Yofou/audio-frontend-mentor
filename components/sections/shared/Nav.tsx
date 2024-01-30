@@ -9,6 +9,8 @@ import { OrangeButton } from "~/components/form/Button";
 import { NumberInput } from "~/components/form/Input";
 import { Hamburger } from "~/components/icons/Hamburger";
 import { Cart } from "~/components/icons/Cart";
+import { useCart } from "~/utils/stores/cart";
+import { currencyFormatter } from '~/utils/currency'
 
 export const NavLink = defineComponent(
   (props, context) => {
@@ -25,11 +27,6 @@ export const NavLink = defineComponent(
   }
 );
 
-const currencyFormatter = new Intl.NumberFormat("en-us", {
-  style: "currency",
-  currency: "usd",
-  maximumSignificantDigits: 3,
-});
 type NavCartItemProps = {
   title: string;
   price: number;
@@ -38,25 +35,30 @@ type NavCartItemProps = {
 };
 
 export const NavCartItem = defineComponent(
-  (props: NavCartItemProps) => {
+  (props: NavCartItemProps, context) => {
     const currencyFormatted = computed(() => {
       return currencyFormatter.format(props.price);
     });
 
-    const quantity = ref(1);
-
-    onMounted(() => {
-      quantity.value = props.quantity ?? 1
-    })
+    const quantity = computed({
+      get() {
+        return props.quantity ?? 1;
+      },
+      set(value) {
+        context.emit("update:quantity", value);
+      },
+    });
 
     return () => (
       <div class="w-full grid grid-cols-[max-content,1fr,max-content] gap-4 items-center">
-        <div class="w-16 h-16 grid place-content-center rounded-[.5rem] bg-white-600">
-          <img src={props.src} alt="" />
+        <div class="w-16 h-16 grid rounded-[.5rem] overflow-hidden bg-white-600">
+          <img class="place-self-center" src={props.src} alt="" />
         </div>
         <div class="w-full flex flex-col">
           <h3 class="font-body text-black-pure font-bold">{props.title}</h3>
-          <p class="font-overline text-black-pure/50 tracking-[unset] font-bold">{currencyFormatted.value}</p>
+          <p class="font-overline text-black-pure/50 tracking-[unset] font-bold">
+            {currencyFormatted.value}
+          </p>
         </div>
 
         <NumberInput v-model={quantity.value} />
@@ -66,6 +68,7 @@ export const NavCartItem = defineComponent(
   {
     name: "NavCartItem",
     props: ["title", "price", "src", "quantity"],
+    emits: ["update:quantity"],
   }
 );
 
@@ -73,6 +76,27 @@ export const NavCart = defineComponent(
   (_, context) => {
     const cartElm = ref<HTMLElement | undefined>();
     const { activate, deactivate } = useFocusTrap(cartElm);
+    const cartStore = useCart();
+    const products = computed(() => {
+      return [...cartStore.inCart.entries()].map(([id, quantity]) => {
+        return {
+          product: getProductById(id),
+          quantity,
+        };
+      });
+    });
+
+    const totalPrice = computed(() => {
+      const value = products.value.reduce((total, current) => {
+        return total + current.quantity * (current.product?.price ?? 0);
+      }, 0);
+
+      return currencyFormatter.format(value);
+    });
+
+    const handleQuantityChange = (productId: string) => (quantity: number) => {
+      cartStore.addProduct(productId, quantity);
+    };
 
     onKeyStroke("Escape", () => {
       context.emit("close");
@@ -93,7 +117,7 @@ export const NavCart = defineComponent(
     });
 
     return () => (
-      <section class="w-screen h-screen fixed top-0 left-0 bg-black-pure/40 grid">
+      <section class="w-screen h-screen fixed overflow-auto top-0 left-0 bg-black-pure/40 grid">
         <div class="max-w-[70rem] w-full relative justify-self-center">
           <div
             ref={cartElm}
@@ -101,35 +125,38 @@ export const NavCart = defineComponent(
           >
             <div class="w-full flex justify-between items-center">
               <h2 class="font-heading-6 uppercase">Cart</h2>
-              <button class="font-body tracking-[none] text-black-pure/50 underline">
+              <button
+                class="font-body tracking-[none] text-black-pure/50 underline"
+                onClick={cartStore.reset}
+              >
                 Remove all
               </button>
             </div>
 
             <div class="mt-8 flex flex-col gap-6">
-              <NavCartItem
-                title={"title"}
-                src={"/small/yx1.png"}
-                price={10}
-                quantity={10}
-              />
-
-              <NavCartItem
-                title={"YX1"}
-                src={"/small/yx1.png"}
-                price={2999}
-                quantity={10}
-              />
+              {products.value.map(({ product, quantity }) => {
+                return (
+                  <NavCartItem
+                    title={product?.shortTitle ?? ""}
+                    price={product?.price ?? 0}
+                    src={product?.assets.xSmall ?? ''}
+                    quantity={quantity}
+                    onUpdate:quantity={handleQuantityChange(product?.id ?? "")}
+                  />
+                );
+              })}
             </div>
 
             <div class="w-full flex justify-between mt-8">
               <p class="uppercase text-black-pure/50 font-body tracking-[none]">
                 total
               </p>
-              <p class="font-heading-6 text-black-pure">$ 5,000</p>
+              <p class="font-heading-6 text-black-pure">{totalPrice.value}</p>
             </div>
 
-            <OrangeButton class="w-full mt-6">Checkout</OrangeButton>
+            <OrangeButton to="/checkout" class="w-full mt-6 block text-center">
+              Checkout
+            </OrangeButton>
           </div>
         </div>
       </section>

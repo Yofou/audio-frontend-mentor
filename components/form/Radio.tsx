@@ -14,11 +14,25 @@ export const RadioGroup = defineComponent(
     provide("value", value);
     provide("name", props.name);
 
+    onMounted(() => {
+      value.value = props.modelValue
+    })
+
+    watchEffect(() => {
+      value.value = props.modelValue
+    })
+
+    watchEffect(() => {
+      context.emit('update:modelValue', value.value)
+    })
+
     return () => <fieldset>{context.slots.default({})}</fieldset>;
   },
   {
     slots: Object as SlotsType<{ default: {} }>,
-    props: ["name"],
+    props: ["name", "modelValue"],
+    emits: ['update:modelValue'],
+    inheritAttrs: true,
     name: "RadioGroup",
   }
 );
@@ -43,7 +57,7 @@ export const RadioInput = defineComponent(
     return () => {
       return (
         <label class="font-overline font-bold tracking-[-.01563rem] cursor-pointer hover:border-orange-600 focus-within:border-orange-600 transition-colors px-[1.1rem] py-[1.3rem] flex gap-4 rounded-[.5rem] border border-[#CFCFCF] items-center selection:bg-orange-600">
-          <span class="w-[1.25rem] h-[1.25rem] rounded-full border border-[#CFCFCF] grid place-content-center">
+          <span class="w-[1.25rem] h-[1.25rem] rounded-full border border-[#CFCFCF] grid place-content-center flex-shrink-0">
             {isSelected.value && (
               <div class="w-[.625rem] h-[.625rem] bg-orange-600 rounded-full overflow-hidden" />
             )}

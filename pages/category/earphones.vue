@@ -11,6 +11,7 @@ import { Product } from "~/components/sections/category/Product";
       src="/category-yx1.png"
       :isNewProduct="true"
       :reverse="false"
+      to="/products/8e3c7c8b-2764-4cbc-93c2-b42f9f65c465"
     />
   </CategoryLayout>
 </template>

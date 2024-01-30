@@ -34,7 +34,7 @@ export const Hero = defineComponent(
                 made for the passionate music enthusiast.
               </p>
 
-              <OrangeButton class="w-max self-center md:self-start mt-[1.75rem] sm:mt-10">
+              <OrangeButton to="/products/c1590e9f-c0e9-4ab1-88c7-edaa37b16589" class="w-max self-center md:self-start mt-[1.75rem] sm:mt-10">
                 See Product
               </OrangeButton>
             </section>
